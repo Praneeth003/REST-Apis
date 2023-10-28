@@ -28,8 +28,30 @@ app.get("/filter", (req,res) => {
 })
 
 //4. POST a new joke
+app.post("/jokes", (req, res) =>{
+  const newJoke = {
+    id: jokes.length + 1,
+    jokeText: req.body.text,
+    jokeType: req.body.type,
+  };
+  jokes.push(newJoke);
+  console.log(jokes[jokes.length - 1]);
+  res.json(newJoke);
+});
 
 //5. PUT a joke
+app.put("/jokes/:id", (req, res) =>{
+  const id1 = parseInt(req.params.id);
+  const newJoke = {
+    id: id1,
+    jokeText: req.body.text,
+    jokeType: req.body.type,
+  };
+  const searchIndex = jokes.findIndex((i) => jokes.id === id1);
+  jokes[searchIndex] = newJoke;
+  console.log(newJoke);
+  res.json(newJoke);
+});
 
 //6. PATCH a joke
 
