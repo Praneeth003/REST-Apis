@@ -54,10 +54,44 @@ app.put("/jokes/:id", (req, res) =>{
 });
 
 //6. PATCH a joke
+app.patch("/jokes/:id", (req, res) =>{
+  const id1 = parseInt(req.params.id);
+  const existingJoke = jokes.find((i) => i.id === id1);
+  const newJoke = {
+    id: id1,
+    jokeText: req.body.text || existingJoke.jokeText,
+    jokeType: req.body.type || existingJoke.jokeType
+  };
+  const searchIndex = jokes.findIndex((i) => jokes.id === id1);
+  jokes[searchIndex] = newJoke;
+  console.log(jokes[searchIndex]);
+  res.json(newJoke);
+});
 
 //7. DELETE Specific joke
-
+app.delete("/jokes/:id", (req, res) =>{
+  const id1 = parseInt(req.params.id);
+  const searchIndex = jokes.findIndex((i) => i.id === id1);
+  if(searchIndex != -1){
+    jokes.splice(searchIndex,1);
+    res.sendStatus(200);
+  }else{
+    console.log("Id not found!");
+    res.status(404).json({error: "Id is not found"});
+  }
+});
 //8. DELETE All jokes
+app.delete("/all", (req, res) =>{
+  const enteredKey = req.query.key;
+  if(enteredKey === masterKey){
+    jokes = [];
+    res.sendStatus(200);
+    console.log("Deleted all the secrets!");
+  }
+  else{
+    res.status(404).json({error: " No authorization or the key is wrong"});
+  }
+});
 
 app.listen(port, () => {
   console.log(`Successfully started server on port ${port}.`);
